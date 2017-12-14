@@ -4,7 +4,7 @@ apply plugin: 'signing'
 
 group 'com.bettercloud'
 archivesBaseName = 'vault-java-driver'
-version '3.0.0'
+version '3.1.0-ALIEN1'
 ext.isReleaseVersion = !version.endsWith('SNAPSHOT')
 
 compileJava {
@@ -100,15 +100,6 @@ task integrationTest(type: Test) {
 // signing.password = <public key password>
 // signing.secretKeyRingFile = <full path to your keyring file (i.e secring.gpg)>
 //
-if (!hasProperty('ossrhUsername')) {
-    ext.ossrhUsername = ''
-}
-if (!hasProperty('ossrhPassword')) {
-    ext.ossrhPassword = ''
-}
-if (!hasProperty('nexusUrl')) {
-    ext.nexusUrl = ''
-}
 if (!hasProperty('nexusUsername')) {
     ext.nexusUsername = ''
 }
@@ -130,14 +121,11 @@ uploadArchives {
         mavenDeployer {
             beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
+            repository(url: "https://fastconnect.org/maven/content/repositories/opensource") {
+                authentication(userName: nexusUsername, password: nexusPassword)
             }
 
-//            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-//                authentication(userName: ossrhUsername, password: ossrhPassword)
-//            }
-            snapshotRepository(url: nexusUrl) {
+            snapshotRepository(url: "https://fastconnect.org/maven/content/repositories/opensource-snapshot") {
                 authentication(userName: nexusUsername, password: nexusPassword)
             }
 
